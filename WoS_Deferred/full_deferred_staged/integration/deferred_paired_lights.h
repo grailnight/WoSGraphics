@@ -19,7 +19,7 @@ inline bool ReadPadded(IDirect3DDevice9* device,const Binding& binding,const dou
     if(binding.hasPoints) {
         if(!read(binding.pointCount,1))return false;
         const float nativeCount=bank[binding.pointCount.index][0];
-        if(!std::isfinite(nativeCount)||nativeCount<0||nativeCount>MaxPoints||std::floor(nativeCount)!=nativeCount)return false;
+        if(!WosFinite(nativeCount)||nativeCount<0||nativeCount>MaxPoints||std::floor(nativeCount)!=nativeCount)return false;
         unsigned count=unsigned(nativeCount);
         if(count>binding.pointPosition.count)count=binding.pointPosition.count;
         if(count>binding.pointColor.count)count=binding.pointColor.count;
@@ -36,7 +36,7 @@ inline bool ReadPadded(IDirect3DDevice9* device,const Binding& binding,const dou
         // would keep its native lighting. Drop it and keep the odd count.
         if(padded!=active){
             const float*p=bank[binding.pointPosition.index+active];const float*c=bank[binding.pointColor.index+active];
-            if(!(std::isfinite(p[3])&&p[3]>0)&&c[0]==0&&c[1]==0&&c[2]==0)bank[binding.pointCount.index][0]=float(active);
+            if(!(WosFinite(p[3])&&p[3]>0)&&c[0]==0&&c[1]==0&&c[2]==0)bank[binding.pointCount.index][0]=float(active);
         }
     }
     return Pack(binding,bank,origin,out);

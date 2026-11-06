@@ -18,6 +18,13 @@
 #include <d3d9.h>
 #endif
 
+// std::isfinite is an out-of-line UCRT call (_fdtest/_dtest) in this x86 /O2
+// build, and the per-draw light path runs it dozens of times. NaN and +-Inf are
+// exactly the values with an all-ones exponent, so this is the same predicate
+// (checked against std::isfinite over all 2^32 floats, CPU_AUDIT2 C2).
+inline bool WosFinite(float v){uint32_t b;std::memcpy(&b,&v,sizeof b);return (b&0x7f800000u)!=0x7f800000u;}
+inline bool WosFinite(double v){uint64_t b;std::memcpy(&b,&v,sizeof b);return (b&0x7ff0000000000000ull)!=0x7ff0000000000000ull;}
+
 namespace WosDeferredLights {
 constexpr unsigned ConstantCount=224, MaxPoints=8, RowTexels=32, RowFloats=RowTexels*4, MaxSets=1024;
 struct Register { unsigned index=0,count=0; };
@@ -117,28 +124,28 @@ inline bool Valid(const Binding& b) {
 // This flags existing vertex-baked illumination; no direction/cosine is invented.
 inline bool Pack(const Binding& b,const float bank[ConstantCount][4],const double origin[3],LightSet& out) {
     out={};if(!bank||!origin||!Valid(b))return false;
-    for(unsigned i=0;i<3;++i)if(!std::isfinite(origin[i]))return false;
+    for(unsigned i=0;i<3;++i)if(!WosFinite(origin[i]))return false;
     LightSet result;
     if(b.hasDirectional)for(unsigned i=0;i<3;++i) {
         const float direction=bank[b.direction.index][i],color=bank[b.color.index][i];
-        if(!std::isfinite(direction)||!std::isfinite(color))return false;
+        if(!WosFinite(direction)||!WosFinite(color))return false;
         result.texels[i]=direction;result.texels[4+i]=color;
     }
     if(b.bakedDirectional) {
-        for(unsigned i=0;i<3;++i){const float color=bank[b.color.index][i];if(!std::isfinite(color))return false;result.texels[4+i]=color;}
+        for(unsigned i=0;i<3;++i){const float color=bank[b.color.index][i];if(!WosFinite(color))return false;result.texels[4+i]=color;}
         result.texels[7]=1.0f;
     }
     if(b.hasPoints) {
         const float nativeCount=bank[b.pointCount.index][0];
-        if(!std::isfinite(nativeCount)||nativeCount<0||nativeCount>MaxPoints||std::floor(nativeCount)!=nativeCount)return false;
+        if(!WosFinite(nativeCount)||nativeCount<0||nativeCount>MaxPoints||std::floor(nativeCount)!=nativeCount)return false;
         unsigned count=unsigned(nativeCount);if(count>b.pointPosition.count)count=b.pointPosition.count;if(count>b.pointColor.count)count=b.pointColor.count;
         result.texels[3]=float(count);
         for(unsigned i=0;i<count;++i) {
             const float* position=bank[b.pointPosition.index+i];const float* color=bank[b.pointColor.index+i];
-            if(!std::isfinite(position[3])||position[3]<=0)return false;
+            if(!WosFinite(position[3])||position[3]<=0)return false;
             for(unsigned j=0;j<3;++j) {
                 const double relative=double(position[j])-origin[j];
-                if(!std::isfinite(relative)||std::abs(relative)>(std::numeric_limits<float>::max)()||!std::isfinite(color[j]))return false;
+                if(!WosFinite(relative)||std::abs(relative)>(std::numeric_limits<float>::max)()||!WosFinite(color[j]))return false;
                 result.texels[(2+2*i)*4+j]=float(relative);result.texels[(3+2*i)*4+j]=color[j];
             }
             result.texels[(2+2*i)*4+3]=position[3];
@@ -158,7 +165,7 @@ inline bool Read(IDirect3DDevice9* device,const Binding& binding,const double or
     if(binding.hasPoints) {
         if(!read(binding.pointCount,1))return false;
         const float nativeCount=bank[binding.pointCount.index][0];
-        if(!std::isfinite(nativeCount)||nativeCount<0||nativeCount>MaxPoints||std::floor(nativeCount)!=nativeCount)return false;
+        if(!WosFinite(nativeCount)||nativeCount<0||nativeCount>MaxPoints||std::floor(nativeCount)!=nativeCount)return false;
         unsigned count=unsigned(nativeCount);
         if(count>binding.pointPosition.count)count=binding.pointPosition.count;
         if(count>binding.pointColor.count)count=binding.pointColor.count;
@@ -200,7 +207,7 @@ public:
         if(hasLast&&key==lastKey){id=lastId;return true;}
         const auto existing=lookup.find(key);
         if(existing!=lookup.end()){lastKey=key;lastId=existing->second;hasLast=true;id=lastId;return true;}
-        for(float value:set.texels)if(!std::isfinite(value))return false;
+        for(float value:set.texels)if(!WosFinite(value))return false;
         if(Size()>=MaxSets)return false;
         const uint16_t next=uint16_t(Size());
         // Allocate the map entry first; roll it back if vector allocation fails.

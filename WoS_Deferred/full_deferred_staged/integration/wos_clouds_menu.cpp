@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cstring>
 #include <cctype>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -2737,6 +2738,33 @@ static HRESULT STDMETHODCALLTYPE HookCreatePixelShader(IDirect3DDevice9*d,const 
 static HRESULT STDMETHODCALLTYPE HookCreateVertexShader(IDirect3DDevice9*d,const DWORD*bytes,IDirect3DVertexShader9**out){const HRESULT hr=g_original_create_vertex_shader(d,bytes,out);if(SUCCEEDED(hr)&&out){WosNativeRSM::RegisterVS(d,*out);WosSoftParticles::Register(*out,bytes,false);}return hr;}
 static HRESULT STDMETHODCALLTYPE HookCreateTexture(IDirect3DDevice9*d,UINT w,UINT h,UINT levels,DWORD usage,D3DFORMAT format,D3DPOOL pool,IDirect3DTexture9**out,HANDLE*shared){const HRESULT hr=g_original_create_texture(d,w,h,levels,usage,format,pool,out,shared);if(SUCCEEDED(hr)&&out&&!WosDeferred::busy)WosNativeRSM::RegisterTexture(d,*out);return hr;}
 
+// Bloom, cloud and sky passes ride on draws that use one of our exWoS shaders.
+// Nearly every draw has some other shader, and for it each step below is a
+// no-op that never touches the device, so one classification decides the
+// whole block. Otherwise the steps run exactly as before, each re-testing the
+// shader, because a pass may leave g_current_shader changed. The two scopes
+// live until the draw hook returns, in the same order as the locals they were.
+struct BloomPasses {
+    std::optional<WosCloudLowRes::BloomScope> cloud;
+    std::optional<WosVolumetric::SkyScope> lampSky;
+    explicit BloomPasses(IDirect3DDevice9 *device)
+    {
+        if (ClassifyShader(g_current_shader) == kShaderOther) return;
+        WosDeferred::ReleaseMrtForNative(device);
+        WosWaterSSR::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
+        WosChimneySmoke::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
+        WosStreetSteam::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
+        WosVolumetricBridge::Draw(device, ClassifyShader(g_current_shader)==kShaderBloom);
+        cloud.emplace(device, ClassifyShader(g_current_shader)==kShaderBloom,
+            g_lighting.enabled && g_cam_valid && g_depth_valid && g_inverse_projection_valid, g_cam_pos, g_inverse_view_projection);
+        lampSky.emplace(device, ClassifyShader(g_current_shader)==kShaderBloom);
+        if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
+        if(!WosProbe::suppress&&!WosDeferred::busy&&ClassifyShader(g_current_shader)==kShaderCloud)WosSkyIBL::Capture(device,WosIndirectCamera::CurrentScene());
+    }
+    BloomPasses(const BloomPasses&) = delete;
+    BloomPasses& operator=(const BloomPasses&) = delete;
+};
+
 static HRESULT STDMETHODCALLTYPE HookDrawPrimitive(IDirect3DDevice9 *device, D3DPRIMITIVETYPE type, UINT start, UINT count)
 {
     WosHookProfile::Draw prof;
@@ -2757,16 +2785,7 @@ static HRESULT STDMETHODCALLTYPE HookDrawPrimitive(IDirect3DDevice9 *device, D3D
     // Held G-buffer targets would make the GI material scope bypass the frame.
     if(WosIndirect::enabled&&!deferredScope.Handled())WosDeferred::ReleaseMrtForNative(device);
     WosIndirectMaterials::DrawScope materialScope(device,WosIndirect::enabled && !deferredScope.Handled() && !WosCascadeProbe::continuous && !WosCascadeProbe::active,true); hookTimer.kind=(materialScope.changed||materialScope.deferred)?WosShadowWork::HookGiTargets:(deferredScope.Handled()?WosShadowWork::HookDeferred:WosShadowWork::HookOther);prof.Mark(WosHookProfile::IndirectMaterials);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    WosWaterSSR::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosChimneySmoke::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosStreetSteam::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosVolumetricBridge::Draw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosCloudLowRes::BloomScope cloudScope(device, ClassifyShader(g_current_shader)==kShaderBloom,
-        g_lighting.enabled && g_cam_valid && g_depth_valid && g_inverse_projection_valid, g_cam_pos, g_inverse_view_projection);
-    WosVolumetric::SkyScope lampSkyScope(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    if(!WosProbe::suppress&&!WosDeferred::busy&&ClassifyShader(g_current_shader)==kShaderCloud)WosSkyIBL::Capture(device,WosIndirectCamera::CurrentScene());prof.Mark(WosHookProfile::BloomPasses);
+    BloomPasses bloomPasses(device);prof.Mark(WosHookProfile::BloomPasses);
     WosIndirect::DrawScope indirectScope(device);
     WosProbe::Draw(device, "DP", type, count, reinterpret_cast<uintptr_t>(_ReturnAddress()));prof.Mark(WosHookProfile::IndirectProbe);
     WosCascadeProbe::Replay(device,[&](){return g_original_draw_primitive(device, type, start, count);});prof.Mark(WosHookProfile::CascadeReplay);
@@ -2802,16 +2821,7 @@ static HRESULT STDMETHODCALLTYPE HookDrawIndexedPrimitive(IDirect3DDevice9 *devi
     // Held G-buffer targets would make the GI material scope bypass the frame.
     if(WosIndirect::enabled&&!deferredScope.Handled())WosDeferred::ReleaseMrtForNative(device);
     WosIndirectMaterials::DrawScope materialScope(device,WosIndirect::enabled && !deferredScope.Handled() && !WosCascadeProbe::continuous && !WosCascadeProbe::active,true); hookTimer.kind=(materialScope.changed||materialScope.deferred)?WosShadowWork::HookGiTargets:(deferredScope.Handled()?WosShadowWork::HookDeferred:WosShadowWork::HookOther);prof.Mark(WosHookProfile::IndirectMaterials);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    WosWaterSSR::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosChimneySmoke::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosStreetSteam::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosVolumetricBridge::Draw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosCloudLowRes::BloomScope cloudScope(device, ClassifyShader(g_current_shader)==kShaderBloom,
-        g_lighting.enabled && g_cam_valid && g_depth_valid && g_inverse_projection_valid, g_cam_pos, g_inverse_view_projection);
-    WosVolumetric::SkyScope lampSkyScope(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    if(!WosProbe::suppress&&!WosDeferred::busy&&ClassifyShader(g_current_shader)==kShaderCloud)WosSkyIBL::Capture(device,WosIndirectCamera::CurrentScene());prof.Mark(WosHookProfile::BloomPasses);
+    BloomPasses bloomPasses(device);prof.Mark(WosHookProfile::BloomPasses);
     WosIndirect::DrawScope indirectScope(device);
     WosProbe::Draw(device, "DIP", type, primitives, reinterpret_cast<uintptr_t>(_ReturnAddress()));prof.Mark(WosHookProfile::IndirectProbe);
     WosCascadeProbe::Replay(device,[&](){return g_original_draw_indexed_primitive(device, type, base, min_index, vertices, start, primitives);});prof.Mark(WosHookProfile::CascadeReplay);
@@ -2843,16 +2853,7 @@ static HRESULT STDMETHODCALLTYPE HookDrawPrimitiveUP(IDirect3DDevice9 *device, D
     // Held G-buffer targets would make the GI material scope bypass the frame.
     if(WosIndirect::enabled&&!deferredScope.Handled())WosDeferred::ReleaseMrtForNative(device);
     WosIndirectMaterials::DrawScope materialScope(device,WosIndirect::enabled && !deferredScope.Handled() && !WosCascadeProbe::continuous && !WosCascadeProbe::active,false);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    WosWaterSSR::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosChimneySmoke::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosStreetSteam::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosVolumetricBridge::Draw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosCloudLowRes::BloomScope cloudScope(device, ClassifyShader(g_current_shader)==kShaderBloom,
-        g_lighting.enabled && g_cam_valid && g_depth_valid && g_inverse_projection_valid, g_cam_pos, g_inverse_view_projection);
-    WosVolumetric::SkyScope lampSkyScope(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    if(!WosProbe::suppress&&!WosDeferred::busy&&ClassifyShader(g_current_shader)==kShaderCloud)WosSkyIBL::Capture(device,WosIndirectCamera::CurrentScene());
+    BloomPasses bloomPasses(device);
     WosIndirect::DrawScope indirectScope(device);
     WosProbe::Draw(device, "DPUP", type, primitives, reinterpret_cast<uintptr_t>(_ReturnAddress()));
     WosRSMGeometry::DrawScope rsmScope(device,!nativeRsmScope.OwnsObservation());
@@ -2879,16 +2880,7 @@ static HRESULT STDMETHODCALLTYPE HookDrawIndexedPrimitiveUP(IDirect3DDevice9 *de
     // Held G-buffer targets would make the GI material scope bypass the frame.
     if(WosIndirect::enabled&&!deferredScope.Handled())WosDeferred::ReleaseMrtForNative(device);
     WosIndirectMaterials::DrawScope materialScope(device,WosIndirect::enabled && !deferredScope.Handled() && !WosCascadeProbe::continuous && !WosCascadeProbe::active,false);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    WosWaterSSR::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosChimneySmoke::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosStreetSteam::BloomDraw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosVolumetricBridge::Draw(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    WosCloudLowRes::BloomScope cloudScope(device, ClassifyShader(g_current_shader)==kShaderBloom,
-        g_lighting.enabled && g_cam_valid && g_depth_valid && g_inverse_projection_valid, g_cam_pos, g_inverse_view_projection);
-    WosVolumetric::SkyScope lampSkyScope(device, ClassifyShader(g_current_shader)==kShaderBloom);
-    if(ClassifyShader(g_current_shader)!=kShaderOther)WosDeferred::ReleaseMrtForNative(device);
-    if(!WosProbe::suppress&&!WosDeferred::busy&&ClassifyShader(g_current_shader)==kShaderCloud)WosSkyIBL::Capture(device,WosIndirectCamera::CurrentScene());
+    BloomPasses bloomPasses(device);
     WosIndirect::DrawScope indirectScope(device);
     WosProbe::Draw(device, "DIPUP", type, primitives, reinterpret_cast<uintptr_t>(_ReturnAddress()));
     WosRSMGeometry::DrawScope rsmScope(device,!nativeRsmScope.OwnsObservation());

@@ -105,8 +105,8 @@ static void Observe(const WosDeferredLights::LightSet&set,const double origin[3]
         Light l;l.range=1.f/p[3];double dist2=0;
         for(int j=0;j<3;++j){l.p[j]=origin[j]+p[j];dist2+=double(p[j])*p[j];}
         l.score=(std::max)(c[0],(std::max)(c[1],c[2]))/float(1+dist2);
-        if(!std::isfinite(l.range)||l.range<.2f||!std::isfinite(l.score)||l.score<=0)continue;
-        for(int j=0;j<3;++j)l.colour[j]=std::isfinite(c[j])?(std::max)(c[j],0.f):0.f;
+        if(!WosFinite(l.range)||l.range<.2f||!WosFinite(l.score)||l.score<=0)continue;
+        for(int j=0;j<3;++j)l.colour[j]=WosFinite(c[j])?(std::max)(c[j],0.f):0.f;
         bool found=false;
         for(auto&other:observed)if(Same(l,other)){
             other.score=(std::max)(other.score,l.score);
