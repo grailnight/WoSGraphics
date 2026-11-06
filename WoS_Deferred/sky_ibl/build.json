@@ -1,0 +1,23 @@
+{
+  "package\\deferred_ambient_occlusion.hlsl": "90576ed8e8e2955a0ab7e42ee1223b4dae55fe4f338c25c54bab0d947c853611",
+  "package\\deferred_ambient_upsample.hlsl": "9e9eda40fc712a9b3f0e7b6da0af43a0849613e6a566df846df18a7ea72e0c2c",
+  "package\\deferred_brdf.hlsl": "cf71393b0a49abe19148104474cb3d5fe2f5883215347c2cd333252b6ba20010",
+  "package\\deferred_cloud_shadow.hlsl": "cdfb53380305d5c7335a829951f4172d4aafa837f47226cbda280fde337a9263",
+  "package\\deferred_height_fog.hlsl": "bf2563c0bea39a9d49151c14c4de1d1c64c5fa546f06aa67efd6d93b4621e022",
+  "package\\deferred_local_shadow.hlsl": "3a4b35840acd5ad96b01f93fa7f8d95e2419791374151d32f693d6c816022bbf",
+  "package\\deferred_resolve.hlsl": "c087914c68764c16b7e7834be863f3dfc5f86d625c01f301615fb7d7f12dcc2e",
+  "package\\deferred_volumetric.hlsl": "8dda85a44015bba69a23e1e62caa2afe567c80d6c525c22cdfffd3a5e4e941de",
+  "package\\deferred_volumetric_composite.hlsl": "936d9b3a9da2822331dd9ea66411b729e1ad9b4aada6b205607719e339239379",
+  "package\\pbr_legacy_bridge.hlsl": "97445fc350dd6d896032e67a52f0496730588ef4ee50570890f34095f839d0ee",
+  "package\\preview.hlsl": "289202560be6c2c20f5c33bbd95715297667a82479936a5d862d4407055de602",
+  "package\\probe.hlsl": "a0025b264267508c2e8bb6c342c1581e6471f4dee9f5e7918c4ab1fa80bcf97d",
+  "package\\rainfall.hlsl": "8f92bdfa1816ccc7130b416138778995fffef912fb5f83bc8aa1fd7a16e62faa",
+  "package\\sky_ibl.hlsl": "a30f301ee446a77ed4138606112ca3e104ff68e1035e8f5e078d7b7cef8e01a4",
+  "package\\sky_resolve.hlsl": "ea546aaaf4b167858977bc068775205c0d40b8fb98f091ab718ecac4f1388d5d",
+  "package\\wet_surface.hlsl": "e44108b4d39f1f0ea3161acd59b65541ba138ac3368d8f13f55af2371665e6c1",
+  "package\\wos_cloud_field.hlsli": "bbb50030d6e4c3ea143b5e243f72a70735d0d598b00b5f1eb8bceca559ef5b8a",
+  "sky_resolve.hlsl": "7a552f23fe10055584dbe29d3f17359d4c4fa4776c67e05613c2a7c1308dd78e",
+  "sky_resolve.cso": "a47c1fbc44e8b08cf58a4899122a9fb331862373ee3f8d3daf6e1430b750b213",
+  "probe.cso": "4468fd11c84d6097935a5c3332c14518ecd88ce32f58bb5853a4550f0f5b55b2",
+  "preview.cso": "a5423b3abee2243959232abf7908e4083a239401b21d17289a857ad52a6d7761"
+}

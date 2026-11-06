@@ -1,0 +1,26 @@
+[
+  {
+    "name": "sm_water_mesh",
+    "original_bytes": 2924,
+    "replacement_bytes": 3248,
+    "original_sha256": "79adb9909d8909e637f54e96783d0815e2c1102b8c4f695118d9a33162f18df7",
+    "replacement_sha256": "690a9b2fc1a0e61897e2b405b6787c579ef70e2bcb38ce1fd7e6011a1e91a85b",
+    "ctab_preserved": true
+  },
+  {
+    "name": "sm_water_pond_mesh",
+    "original_bytes": 7308,
+    "replacement_bytes": 7632,
+    "original_sha256": "0f27e9140849b6b0061137752195a80585db5ded467bf4569e156aa400ed8303",
+    "replacement_sha256": "9f7cecc546d19a4a1810f0c9ee2f6226c501b3fb0094a48d204700bdccfb3a21",
+    "ctab_preserved": true
+  },
+  {
+    "name": "sm_water_pond_uv1",
+    "original_bytes": 7728,
+    "replacement_bytes": 7752,
+    "original_sha256": "c573a1d8e92ebf245d76791e9c89f2b70632ffdbf31ab41377d4b9f822979fd9",
+    "replacement_sha256": "bb53691c685c3520f20e69652d82116d98cffdfbd783173458bc6dbc0e335a64",
+    "ctab_preserved": true
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "upstream": "https://github.com/iryoku/smaa",
+  "source": "Existing local SweetFX distribution; exact upstream revision unknown; original MIT notice retained",
+  "sha256": {
+    "AreaTex.png": "0044e6b420a8d98a9dc6a60bedbd43f75cd15ac6052fdedfb2f2f55d3077beed",
+    "SearchTex.png": "55a97853ab64174245701accf315ab63d41776c9cb2aa14c675e653684fd96f3",
+    "SMAA.hlsl": "ee18b0f376585338cdb477a0900757cebac86d3c476ef99955348b55818c8310"
+  }
+}

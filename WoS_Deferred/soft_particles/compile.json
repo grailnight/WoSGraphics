@@ -1,0 +1,29 @@
+{
+  "compiler": "d3dcompiler_47.dll",
+  "shaders": [
+    {
+      "name": "soft_particles_vs",
+      "profile": "vs_3_0",
+      "source_sha256": "a05a62fe8103019fa05b8a1b68d26ca9399911f4d74af288028376742a650fd1",
+      "shader_sha256": "487120e90c02b22188896560deb7d404fd952f3a7880e7c4310bae9a86cb3f18",
+      "shader_bytes": 448,
+      "diagnostics": ""
+    },
+    {
+      "name": "soft_particles_ps",
+      "profile": "ps_3_0",
+      "source_sha256": "e78c0279626e77b9c73bdd34eeff1985b6bd2c48b40b165e2abb1d15f055d837",
+      "shader_sha256": "a92850410df5bebb07fcb4d5506b24aa7e16ab86c4b0b9f76e7da3ae374275c3",
+      "shader_bytes": 872,
+      "diagnostics": ""
+    },
+    {
+      "name": "soft_particles_depth",
+      "profile": "ps_3_0",
+      "source_sha256": "22ab8ef2d5b362897f9f0afb5c7a893cc9bd5983151b942ada67ddb7ecaec23a",
+      "shader_sha256": "5e65e451f404fa2e842dd7becde4d74397414a9eccb5bab76f23cfdb6d4e653a",
+      "shader_bytes": 232,
+      "diagnostics": ""
+    }
+  ]
+}

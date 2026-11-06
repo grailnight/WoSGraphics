@@ -1,0 +1,23 @@
+{
+  "valid": true,
+  "gpu_hal": true,
+  "checks": 2421,
+  "scenarios": 99,
+  "inputs": {
+    "gpu_test.cpp": "4c1c73967f9341339abde2e41145755fe3b9d87c97f3f5b062d9b284e25608ca",
+    "gpu_test.exe": "d46adb92fa75d1f49f140080c142c731ec17bea87d843856dba060030178be8a",
+    "fixture.cpp": "d20db09413613402356e67504ebe1716f799edec90029fbaebbc005da908cb26",
+    "sky_ibl_runtime.h": "8933977fc6832b53d60a3d76fe6410e325bed644ab7282e9de2a019ea1e213bb",
+    "sky_lut.generated.h": "2ed21400acc390dcb263a70da8a53a4470fd0844755c99b18fe461e24fbb09b9",
+    "sky_palette.generated.h": "996571433c133e37dc37fc1612b5921db12931fbc6b8938135d60189991c5078",
+    "sky_shader.generated.h": "ac317690cbd158ec7d9b0932a62a797f6f9fe08f3a2d9e3bda69625fc87a4b7a",
+    "sky_resolve.cso": "a47c1fbc44e8b08cf58a4899122a9fb331862373ee3f8d3daf6e1430b750b213",
+    "probe.cso": "4468fd11c84d6097935a5c3332c14518ecd88ce32f58bb5853a4550f0f5b55b2",
+    "package/sky_ibl.hlsl": "a30f301ee446a77ed4138606112ca3e104ff68e1035e8f5e078d7b7cef8e01a4",
+    "package/pbr_legacy_bridge.hlsl": "97445fc350dd6d896032e67a52f0496730588ef4ee50570890f34095f839d0ee",
+    "gpu_test.log": "890cd1ecc3199ba10cfa88359634180630031c12bbac1a62a12014f27803f184",
+    "winmm.candidate.dll": "e474860f68df55634f000bc64c2eed8d2dd3dbb16a51796227ef2b0af8c5de27"
+  },
+  "deployment_valid": false,
+  "in_game_regression": "Effects/performance regression from baseline-source mismatch; installed DLL rolled back"
+}

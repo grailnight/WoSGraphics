@@ -1,0 +1,12 @@
+# Store every file byte for byte: many sources are CRLF, some have mixed line
+# endings, and the build hashes its inputs (freeze_build.py). No EOL conversion.
+* -text
+
+# wos_clouds_menu.cpp contains NUL bytes; still diff the sources as text.
+*.cpp diff
+*.h diff
+*.hlsl diff
+*.hlsli diff
+*.py diff
+*.ps1 diff
+*.md diff

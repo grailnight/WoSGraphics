@@ -1,0 +1,12 @@
+﻿{
+    "shader_sha256":  [
+                          "487120e90c02b22188896560deb7d404fd952f3a7880e7c4310bae9a86cb3f18",
+                          "a92850410df5bebb07fcb4d5506b24aa7e16ab86c4b0b9f76e7da3ae374275c3",
+                          "5e65e451f404fa2e842dd7becde4d74397414a9eccb5bab76f23cfdb6d4e653a"
+                      ],
+    "installed":  "2026-09-30T17:12:53",
+    "in_game_tested":  false,
+    "backup":  "B:\\Games\\Spider Man - Web of Shadows\\WoS_Deferred\\backups\\winmm.pre_soft_particles_20260930_171253.dll",
+    "previous_sha256":  "8b19df71150be1d9a403f6593a940b7b584560afdcf69d2a58a798c54deaaa33",
+    "dll_sha256":  "86c3223824a6344d2ca1a14120bd9b5dc35c202d92cf10fd7defe361a06b282d"
+}

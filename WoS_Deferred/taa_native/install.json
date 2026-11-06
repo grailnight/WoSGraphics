@@ -1,0 +1,14 @@
+{
+  "installed": true,
+  "scope": "Native TAA: Halton jitter through patched vertex shader twins, depth/camera reprojection, YCoCg variance clip, after SMAA at the bloom composite; [TAA] in clouds_menu.ini",
+  "installed_at": "2026-09-14T23:41:54.309546+05:00",
+  "previous_dll_sha256": "043e34c9ea11af54f56dc59a646f2c8dbb978f6f6369ffbcce2a7d41fc00e7a6",
+  "dll_sha256": "b7a4e8405adae770131345b124435f96428c14e268bd17dfb4f2aba7d0fdd572",
+  "shaders": {
+    "taa_resolve.cso": "de08928e63459e776317ca7a5f0f1c3f63050d35a88054c02359ac798bac5177",
+    "taa_present.cso": "14c6a063f7c69a02692b7b91450e454df5f07cd21e2f84565bc78daca74db581"
+  },
+  "backup": "B:\\Games\\Spider Man - Web of Shadows\\WoS_Deferred\\taa_native\\install_backup_20260914_234154",
+  "gpu_test": "PASS, taa_native/receipt.json",
+  "live_gameplay_verified": false
+}

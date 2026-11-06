@@ -1,0 +1,123 @@
+# WoSGraphics: the repository lives in the game folder, so everything is
+# ignored by default and only the graphics mod sources are let back in.
+# Game files, other mods, captures, builds and backups stay untracked.
+
+# 1. Root: only the graphics folders.
+/*
+!/.gitignore
+!/.gitattributes
+!/.gitmodules
+!/README.md
+!/WoS_Deferred/
+!/WoS_Water/
+!/WoS_VolumetricClouds/
+!/WoS_DLSS/
+
+# 2. Renderer (winmm.dll) and the modules it compiles in.
+/WoS_Deferred/*
+!/WoS_Deferred/full_deferred_staged/
+!/WoS_Deferred/full_deferred/
+!/WoS_Deferred/chimney_smoke/
+!/WoS_Deferred/cloud_lowres/
+!/WoS_Deferred/day_cycle/
+!/WoS_Deferred/dlss_native/
+!/WoS_Deferred/night_lamps/
+!/WoS_Deferred/night_reflection/
+!/WoS_Deferred/sky_ibl/
+!/WoS_Deferred/smaa_native/
+!/WoS_Deferred/soft_particles/
+!/WoS_Deferred/street_steam/
+!/WoS_Deferred/taa_native/
+# Module subfolders are captures, backups, snapshots or extracted game data.
+/WoS_Deferred/*/*/
+!/WoS_Deferred/full_deferred_staged/integration/
+!/WoS_Deferred/full_deferred_staged/build/
+!/WoS_Deferred/full_deferred/third_party/
+!/WoS_Deferred/smaa_native/third_party/
+!/WoS_Deferred/cloud_lowres/test/
+
+# full_deferred_staged holds hundreds of research scripts; keep the build only.
+/WoS_Deferred/full_deferred_staged/*
+!/WoS_Deferred/full_deferred_staged/integration/
+!/WoS_Deferred/full_deferred_staged/build/
+!/WoS_Deferred/full_deferred_staged/build_integration.ps1
+!/WoS_Deferred/full_deferred_staged/freeze_build.py
+!/WoS_Deferred/full_deferred_staged/prepare_integration.py
+!/WoS_Deferred/full_deferred_staged/verify_install.py
+!/WoS_Deferred/full_deferred_staged/cloud_sun_sync.h
+!/WoS_Deferred/full_deferred_staged/README_RU.md
+!/WoS_Deferred/full_deferred_staged/CONTROL_API.md
+/WoS_Deferred/full_deferred_staged/build/*
+!/WoS_Deferred/full_deferred_staged/build/winmm_forward.h
+!/WoS_Deferred/full_deferred_staged/build/winmm.generated.def
+
+# Live shader folder: sources and default settings only.
+/WoS_Deferred/full_deferred/*
+!/WoS_Deferred/full_deferred/third_party/
+!/WoS_Deferred/full_deferred/*.hlsl
+!/WoS_Deferred/full_deferred/*.hlsli
+!/WoS_Deferred/full_deferred/settings.ini
+
+# 3. Water SSR and native water hooks.
+/WoS_Water/*/
+!/WoS_Water/ssr/
+
+# 4. imgui (MIT): a submodule of github.com/ocornut/imgui at the commit the
+#    renderer builds against (see .gitmodules).
+/WoS_VolumetricClouds/*
+!/WoS_VolumetricClouds/tools/
+/WoS_VolumetricClouds/tools/*
+!/WoS_VolumetricClouds/tools/imgui/
+
+# 5. DLAA: x64 host and the shared IPC header (no NVIDIA SDK files).
+/WoS_DLSS/*/
+!/WoS_DLSS/host/
+!/WoS_DLSS/shared/
+/WoS_DLSS/host/*/
+
+# 6. Never: game-derived data, build outputs, runtime state, backups.
+# Exact bytecode of the game's own shaders (generated locally from your copy).
+/WoS_Water/native_assets.h
+/WoS_Deferred/full_deferred_staged/integration/native/WoS_Deferred/rsm_flux_mrt_staged/shader_assets.h
+extracted/
+*.cso
+*.asm
+*.obj
+*.exe
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.idb
+*.iobj
+*.ipdb
+*.png
+*.jpg
+*.raw
+*.ppm
+*.dds
+*.bin
+*.log
+*.zip
+*.rar
+*.7z
+*.mp4
+*.csv
+*.dat
+*.patch
+*.pyc
+__pycache__/
+*.tmp
+*.bak
+*.orig
+*.pre_*
+*.before*
+*_before_*
+*_status.json
+*receipt*.json
+release_manifest.json
+control.ini
+preflight.json
+*results*.txt
+cpu_test_build.txt

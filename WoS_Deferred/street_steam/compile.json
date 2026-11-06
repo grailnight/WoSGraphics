@@ -1,0 +1,21 @@
+{
+  "compiler": "d3dcompiler_47.dll",
+  "shaders": [
+    {
+      "name": "street_steam_vs",
+      "profile": "vs_3_0",
+      "source_sha256": "97ee447831d44ecc966a5f0855eb7e22bfd9136d733d535bca41adaa488bfd94",
+      "shader_sha256": "bf781824f749cf829e1ca28ce2fa92b4d350dc2e4985405c18090347e53927da",
+      "shader_bytes": 392,
+      "diagnostics": ""
+    },
+    {
+      "name": "street_steam_ps",
+      "profile": "ps_3_0",
+      "source_sha256": "2a81dcbc2b9d046837132c59aebf3782bc74592243624a3ab8f70b4cfd3899a6",
+      "shader_sha256": "b67e56343061c35d8edb3dfffd65f0900e9e88df1a1cc4064f8530c27c8d27d3",
+      "shader_bytes": 872,
+      "diagnostics": ""
+    }
+  ]
+}

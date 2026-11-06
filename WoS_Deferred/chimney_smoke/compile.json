@@ -1,0 +1,13 @@
+{
+  "profile": "ps_3_0",
+  "compiler": "d3dcompiler_47.dll",
+  "shaders": [
+    {
+      "name": "chimney_smoke",
+      "source_sha256": "f98c5e65f814d6912ff9f93305628fdd557692677d32120175d98d2ea48a3c2c",
+      "shader_sha256": "073c28be78f817e54b4110dc55c364739fc327eb0c8ce038c5661de655a212a1",
+      "shader_bytes": 7604,
+      "diagnostics": ""
+    }
+  ]
+}

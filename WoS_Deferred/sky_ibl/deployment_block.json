@@ -1,0 +1,10 @@
+{
+  "blocked": true,
+  "reason": "Shared integration sources did not reproduce the installed renderer. Candidate lost shadow work/global caches and user reported missing effects or FPS loss. Exact original DLL restored.",
+  "restored_dll_sha256": "ac2a629d1b274817e187d85fadc4a3b5442797fb9c89c65528347b45456d7c38",
+  "first_candidate_sky_captures": 404,
+  "first_candidate_sky_binds": 0,
+  "late_sky_fix": "Allow current or immediately previous frame in same scene; compiled but not installed or verified in game.",
+  "required_before_redeployment": "Reconstruct and verify exact working renderer source/dependency set, preserve existing effects and optimizations, then merge IBL and repeat regression checks.",
+  "baseline_source_clue": "WoS_Deferred/mie_phase/backup_20260917_225044/integration/deferred_runtime.h contains shadow_work_cache hooks missing from current shared integration; this is only a clue, not a verified complete baseline."
+}

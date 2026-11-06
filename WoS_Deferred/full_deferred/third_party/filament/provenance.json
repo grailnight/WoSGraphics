@@ -1,0 +1,29 @@
+{
+  "project": "Google Filament",
+  "repository": "https://github.com/google/filament",
+  "commit": "f840f1e6aa65ec915f6bc8a2c67869f5ad631e35",
+  "retrieved_utc": "2026-09-09T08:05:04.228160+00:00",
+  "license": "Apache-2.0",
+  "upstream_root_notice_files": [],
+  "files": [
+    {
+      "upstream_path": "shaders/src/surface_brdf.fs",
+      "url": "https://raw.githubusercontent.com/google/filament/f840f1e6aa65ec915f6bc8a2c67869f5ad631e35/shaders/src/surface_brdf.fs",
+      "local_file": "surface_brdf.upstream.fs",
+      "bytes": 15742,
+      "sha256": "c0d76d244ace64a35beb331784f5358a5863de351643fcb702eb66e7cb84b9f2"
+    },
+    {
+      "upstream_path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/google/filament/f840f1e6aa65ec915f6bc8a2c67869f5ad631e35/LICENSE",
+      "local_file": "LICENSE",
+      "bytes": 11362,
+      "sha256": "02d70b593dd8e9355dd8e1ca8d13c303bee5bcaf3065b66ff6e4f534e1e6a2c1"
+    }
+  ],
+  "ported_functions": [
+    "D_GGX desktop branch",
+    "V_SmithGGXCorrelated",
+    "F_Schlick(vec3,float,float)"
+  ]
+}

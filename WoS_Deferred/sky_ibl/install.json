@@ -1,0 +1,10 @@
+{
+  "installed_at": "2026-09-18T00:39:07.826569+05:00",
+  "backup": "B:\\Games\\Spider Man - Web of Shadows\\WoS_Deferred\\sky_ibl\\backup\\20260918_003907",
+  "before_sha256": "ac2a629d1b274817e187d85fadc4a3b5442797fb9c89c65528347b45456d7c38",
+  "installed_sha256": "e474860f68df55634f000bc64c2eed8d2dd3dbb16a51796227ef2b0af8c5de27",
+  "in_game_verified": false,
+  "source_snapshot": "candidate_source",
+  "settings_changed": false,
+  "rolled_back": true
+}

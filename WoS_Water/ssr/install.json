@@ -1,0 +1,14 @@
+{
+  "installed": true,
+  "scope": "Shaderpack-style water: mask replay of sm_water_mesh + SSR/Fresnel/sun glint at the bloom composite; [WaterSSR] in clouds_menu.ini",
+  "installed_at": "2026-09-15T00:33:31.181532+05:00",
+  "previous_dll_sha256": "cc2ee119bdab1f8e36d72ac6c354dfeb36bfff3e409e19e42b2d68ab7471861a",
+  "dll_sha256": "ac2a629d1b274817e187d85fadc4a3b5442797fb9c89c65528347b45456d7c38",
+  "shaders": {
+    "water_ssr.cso": "d2079ddf8068814743445eb0b3a0b02d380b6b8f05c03e52a0a40abfd2d31993",
+    "water_mask.cso": "f1a0d8ca70f8f3d6e991b46abebe30bd824988e56b26f901c3aa516fed7d8527"
+  },
+  "backup": "B:\\Games\\Spider Man - Web of Shadows\\WoS_Water\\ssr\\install_backup_20260915_003331",
+  "gpu_test": "PASS, WoS_Water/ssr/gpu_test.log",
+  "live_gameplay_verified": false
+}

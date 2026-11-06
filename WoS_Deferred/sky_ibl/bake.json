@@ -1,0 +1,19 @@
+{
+  "samples": 1024,
+  "weights_size": [
+    256,
+    33
+  ],
+  "brdf_size": [
+    64,
+    64
+  ],
+  "sky_blend": 0.55,
+  "brdf_max_energy": 1.0000486373901367,
+  "sha256": {
+    "sky_weights_0": "2e4c898ccbb3f4f1efca1b25652d24806f3a9c2d8d15c30c0e3ab4d4420fbfe2",
+    "sky_weights_1": "73b3452f5b5c2dfabb5fe17bd981dec856e40c712a23be54f66e11f76e23091c",
+    "sky_weights_2": "266617f55815226059498dd398042950a0d59b80c098dcd1e66fba71d060c879",
+    "sky_brdf": "76756800dfab6a443614afad63d67a8b6e0501544d73e66680a41daec6a4a0a4"
+  }
+}
